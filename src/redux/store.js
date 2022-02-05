@@ -1,6 +1,10 @@
-import { createStore } from "redux";
-import { reducers } from "./reducers";
+import {configureStore} from "@reduxjs/toolkit";
+import gifsReducer from "./slices/gifsSlice";
 
-const store = createStore(reducers, {});
+const store = configureStore({
+  reducer: {
+    gifsStore: gifsReducer,
+  },
+});
 
 export default store;
