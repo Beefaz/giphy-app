@@ -2,7 +2,7 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {getAllGifs} from "../redux/slices/gifsSlice";
 
-const Main = () => {
+const Main = (props) => {
   const gifs = useSelector(getAllGifs);
   console.dir(gifs);
   return <div className={'content-container'}>
