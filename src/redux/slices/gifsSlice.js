@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  allGifs: {}
+  allGifs: []
 }
 
 const gifSlice = createSlice({
