@@ -92,10 +92,6 @@ body {
   flex-wrap: wrap;
   position: relative;
 
-  &.locked {
-    border: 4px solid rgba(255, 255, 255, 0.5);
-  }
-
   & > img {
     width: 100%;
     height: 100%;
@@ -115,8 +111,8 @@ body {
       bottom: 0;
       color: #FFFFFF;
       background: linear-gradient(180deg, rgba(42, 43, 44, 0) 0%, rgb(42, 43, 44) 100%);
-      display: none;
       align-items: center;
+      display: none;
 
       img {
         width: 27px;
@@ -124,6 +120,7 @@ body {
       }
 
       span {
+        display: none;
         margin-left: 8px;
       }
     }
@@ -134,15 +131,35 @@ body {
     cursor: pointer;
   }
 
-  &.unlocked:hover {
+  &.locked {
+    border: 4px solid rgba(255, 255, 255, 0.5);
+
     .lock {
       display: flex;
     }
   }
 
+  &.unlocked:hover {
+    .lock {
+      display: flex;
+
+      span {
+        display: inherit;
+      }
+    }
+  }
+
   &.locked:hover {
+    .lock {
+      display: none;
+    }
+
     .unlock {
       display: flex;
+
+      span {
+        display: inherit;
+      }
     }
   }
 }

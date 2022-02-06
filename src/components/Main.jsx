@@ -1,22 +1,26 @@
 import React from "react";
-import {useSelector} from "react-redux";
-import {getAllGifs} from "../redux/slices/gifsSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {getAllGifs, lockGif, unlockGif} from "../redux/slices/gifsSlice";
 import lock from "../images/svg/lock.svg"
 import unlock from "../images/svg/unlock.svg"
 
 const Main = () => {
+  const dispatch = useDispatch();
   const gifs = useSelector(getAllGifs);
-  const doSomething = (e) => {
-    e.target.isLocked = true;
+  const lockHandler = (item, index) => {
+    if (item.locked) {
+      return dispatch(unlockGif(index));
+    }
+    return dispatch(lockGif(index));
   }
 
   return <div className="main">
     <div className="content-container">
       {gifs.map((item, index) => (
         <div
-          className={`gif-container ${index === 1 ? 'locked' : 'unlocked'}`}
+          className={`gif-container ${item.locked ? 'locked' : 'unlocked'}`}
           key={`gif-item-${index}`}
-          onClick={(e) => doSomething(e)}
+          onClick={() => lockHandler(item, index)}
         >
           <div className="lock-wrapper">
             <div className="lock">
