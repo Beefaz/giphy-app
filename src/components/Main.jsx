@@ -7,11 +7,13 @@ import unlock from "../images/svg/unlock.svg"
 const Main = () => {
   const dispatch = useDispatch();
   const gifs = useSelector(getAllGifs);
+
   const lockHandler = (item, index) => {
-    if (item.locked) {
-      return dispatch(unlockGif(index));
+    item = {...item, position: index, locked: !item.locked};
+    if (!item.locked) {
+      return dispatch(unlockGif(item));
     }
-    return dispatch(lockGif(index));
+    return dispatch(lockGif(item));
   }
 
   return <div className="main">
@@ -44,7 +46,7 @@ const Main = () => {
           </div>
           <img
             className="gif"
-            src={item.images.downsized.url}
+            src={item.images.downsized.url ?? item.images.original.url}
             alt=""
           />
         </div>
