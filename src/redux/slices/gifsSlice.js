@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {sortByDateParam} from "../../helpers/sort-by-date-param";
 import {filterObjectProperties} from "../../helpers/filter-object-properties";
 import {gifCookieHandler} from "../../helpers/gif-cookie-handler";
+import {randomizeKeepingLockedPos} from "../../helpers/randomize-keeping-locked-pos";
 
 export const fetchGifs = createAsyncThunk('fetchGifs', async () => {
   const randomQuery = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 1);
@@ -18,31 +19,17 @@ const gifSlice = createSlice({
     error: null,
   },
   reducers: {
-    shuffleGifs: (state) => {
-      let initialState = [...state.allGifs];
-      let newState = [];
-      const {length} = initialState;
-
-      while (newState.length !== length) {
-        console.log(newState.length);
-        let position = Math.floor(Math.random() * initialState.length);
-        newState.push({...initialState[position], position: position});
-        initialState.splice(position, 1);
-      }
-
-      state.allGifs = [...newState].sort(
-        (item1, item2) => item1.position - item2.position
-      );
+    shuffleGifs: (state, ) => {
+      state.allGifs = randomizeKeepingLockedPos(state.allGifs);
     },
-
-    lockGif: (state, action) => {
-      state.allGifs[action.payload.position] = action.payload;
-      gifCookieHandler(action.payload);
+    lockGif: (state, {payload}) => {
+      state.allGifs[payload.position] = payload;
+      gifCookieHandler(payload);
     },
     unlockGif:
-      (state, action) => {
-        state.allGifs[action.payload.position] = action.payload;
-        gifCookieHandler(action.payload);
+      (state, {payload}) => {
+        state.allGifs[payload.position] = payload;
+        gifCookieHandler(payload);
       }
   },
   extraReducers(builder) {
@@ -50,9 +37,9 @@ const gifSlice = createSlice({
       .addCase(fetchGifs.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchGifs.fulfilled, (state, action) => {
+      .addCase(fetchGifs.fulfilled, (state, {payload}) => {
         const cleanedGifData = filterObjectProperties(
-          action.payload,
+          payload,
           ['id', 'images', 'import_datetime']
         );
         let sortedGifs = sortByDateParam(cleanedGifData, 'import_datetime');
@@ -73,9 +60,9 @@ const gifSlice = createSlice({
         state.allGifs = sortedGifs;
         state.status = 'succeeded';
       })
-      .addCase(fetchGifs.rejected, (state, action) => {
+      .addCase(fetchGifs.rejected, (state, {payload}) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = payload.error.message;
       })
   }
 })
