@@ -6,6 +6,7 @@ import {randomizeKeepingLockedPos} from "../../helpers/randomize-keeping-locked-
 
 export const fetchGifs = createAsyncThunk('fetchGifs', async () => {
   const randomQuery = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 1);
+  //yes, this api key is hardcoded, it has hourly/daily limits and i didn't want to waste time on .env and netlify functions host just to make it working... This is serverless design.
   const response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=f5hp3qYikfuNpEWmJfYECuJ5EmGMK7dZ&q=${randomQuery}&limit=12&offset=0&rating=g&lang=en`)
     .then((response) => response.json());
   return response.data;
